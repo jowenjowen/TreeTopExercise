@@ -1,9 +1,78 @@
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
-@XmlRootElement
-public class OrganizationList {
-    public ArrayList<Organization> organizations = new ArrayList<>();
-    public OrganizationList() {};
+public class OrganizationList extends OrganizationListDTO {
+    private Connection conn;
+
+    private OrganizationListDTO result;
+    public OrganizationList() {
+    };
+
+    public void initialize() throws SQLException, ClassNotFoundException  {
+        Class.forName("org.postgresql.Driver");
+        String dbURL = "jdbc:postgresql://localhost/TreeTop?user=postgres&password=postgres";
+        conn = DriverManager.getConnection(dbURL);
+    }
+
+    private OrganizationListDTO getOrganizationList(ResultSet resultset) throws SQLException {
+        OrganizationListDTO result = new OrganizationListDTO();
+        while (resultset.next()) {
+            OrganizationDTO org = new Organization(resultset.getInt("id"),
+                    resultset.getString("name"),
+                    resultset.getString("city"),
+                    resultset.getString("state"),
+                    resultset.getString("postal"),
+                    resultset.getString("category"));
+            result.organizations.add(org);
+        }
+        return result;
+    }
+
+    public void selectOrganizations(int id, String name, String city, String state, String postal, String category) throws SQLException {
+        StringBuilder sql = new StringBuilder("select * from organizations");
+        List<String> params = getNonDefaultParams(id, name, city, state, postal, category);
+        boolean first = true;
+        for(String param: params) {
+            if (first) {
+                sql.append(" where ");
+                first = false;
+            } else {
+                sql.append(" and ");
+            }
+            sql.append(param);
+        }
+        sql.append(';');
+        Statement stmt = conn.createStatement();
+        ResultSet resultset = stmt.executeQuery(sql.toString());
+        result = getOrganizationList(resultset);
+    }
+
+    private List<String> getNonDefaultParams(int id, String name, String city, String state, String postal, String category) {
+        List<String> result = new ArrayList<>();
+        if (id != 0) {
+            result.add("id="+id);
+        }
+        if (!name.isEmpty()) {
+            result.add("lower(name)=lower('"+name+"')");
+        }
+        if (!city.isEmpty()) {
+            result.add("lower(city)=lower('"+city+"')");
+        }
+        if (!state.isEmpty()) {
+            result.add("lower(state)=lower('"+state+"')");
+        }
+        if (!postal.isEmpty()) {
+            result.add("lower(postal)=lower('"+postal+"')");
+        }
+        if (!category.isEmpty()) {
+            result.add("lower(category)=lower('"+category+"')");
+        }
+        return result;
+    }
+
+    public OrganizationListDTO getSelection() {
+        return result;
+    }
+
 }
