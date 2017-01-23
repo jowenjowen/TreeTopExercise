@@ -15,6 +15,13 @@ public class OrganizationList extends OrganizationListDTO {
         conn = DriverManager.getConnection(dbURL);
     }
 
+    public void selectOrganizations(int id, String name, String city, String state, String postal, String category) throws SQLException {
+        String sql = getSqlString(id, name, city, state, postal, category);
+        Statement stmt = conn.createStatement();
+        ResultSet resultset = stmt.executeQuery(sql.toString());
+        result = getOrganizationList(resultset);
+    }
+
     private OrganizationListDTO getOrganizationList(ResultSet resultset) throws SQLException {
         OrganizationListDTO result = new OrganizationListDTO();
         while (resultset.next()) {
@@ -29,7 +36,7 @@ public class OrganizationList extends OrganizationListDTO {
         return result;
     }
 
-    public void selectOrganizations(int id, String name, String city, String state, String postal, String category) throws SQLException {
+    protected String getSqlString(int id, String name, String city, String state, String postal, String category) {
         StringBuilder sql = new StringBuilder("select * from organizations");
         List<String> params = getNonDefaultParams(id, name, city, state, postal, category);
         boolean first = true;
@@ -43,9 +50,7 @@ public class OrganizationList extends OrganizationListDTO {
             sql.append(param);
         }
         sql.append(';');
-        Statement stmt = conn.createStatement();
-        ResultSet resultset = stmt.executeQuery(sql.toString());
-        result = getOrganizationList(resultset);
+        return sql.toString();
     }
 
     private List<String> getNonDefaultParams(int id, String name, String city, String state, String postal, String category) {
