@@ -69,6 +69,7 @@ I used Jackson for JSON conversion.
 * I built simple DTO objects with JAXB annotations to deal with the return values, and then subclassed them with objects with extra methods for actually dealing with the database.
 * The DTOs used public fields because of time constraints in dealing with JAXB annotations; this should be improved for production code.
 * Due to time constraints, no validation of input parameters is done. The validation should be added for negative ids and invalid orderby fields and directions. 
+* Lastly, due to time constraints, very few JavaDoc comments were put in, and this should be improved.
 ## Installation
 Aside from downloading the code and setting up Intellij to run the project, you will need to setup the postgres database and import the data.
 ### Create an empty table in PostgreSql
