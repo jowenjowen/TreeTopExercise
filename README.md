@@ -70,9 +70,13 @@ I used Jackson for JSON conversion.
 * The DTOs used public fields because of time constraints in dealing with JAXB annotations; this should be improved for production code.
 * Due to time constraints, no validation of input parameters is done. The validation should be added for negative ids and invalid orderby fields and directions. 
 * Lastly, due to time constraints, very few JavaDoc comments were put in, and this should be improved.
+
 ## Installation
+
 Aside from downloading the code and setting up Intellij to run the project, you will need to setup the postgres database and import the data.
+
 ### Create an empty table in PostgreSql
+
 Create a TreeTop PostgreSql server and add a TreeTopDB database with an organizations table(User postgres with password postgres):
 
 CREATE TABLE public.organizations
@@ -102,7 +106,9 @@ WITH (
 ALTER TABLE public.organizations
 
   OWNER TO postgres;
+  
 ### Import the .csv file into the organizations Table
+
 * Download the data file from
 https://s3-us-west-2.amazonaws.com/sample-coding-dataset/organization_sample_data.csv
 * Use PGAdmin3 to import the csv file into the organizations table
@@ -142,6 +148,7 @@ Body returned:
   ]
   
 }
+
 ## Contributors
 
 James Owen
