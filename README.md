@@ -69,6 +69,7 @@ I used Jackson for JSON conversion.
 * I built simple DTO objects with JAXB annotations to deal with the return values, and then subclassed them with objects with extra methods for actually dealing with the database.
 * The DTOs used public fields because of time constraints in dealing with JAXB annotations; this should be improved for production code.
 * Due to time constraints, no validation of input parameters is done. The validation should be added for negative ids and invalid orderby fields and directions. 
+* This implementation did not address security at all. Authentication and Authorization needs to be addressed, and the jdbc query is vulnerable to sql injection attack.
 * Lastly, due to time constraints, very few JavaDoc comments were put in, and this should be improved.
 
 ## Installation
