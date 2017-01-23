@@ -16,11 +16,13 @@ public class TreeTopExersize {
                                    @DefaultValue("") @QueryParam("city") String city,
                                    @DefaultValue("") @QueryParam("state") String state,
                                    @DefaultValue("") @QueryParam("postal") String postal,
-                                   @DefaultValue("") @QueryParam("category") String category
+                                   @DefaultValue("") @QueryParam("category") String category,
+                                   @DefaultValue("") @QueryParam("orderby") String orderby,
+                                   @DefaultValue("") @QueryParam("direction") String direction
     ) throws JsonProcessingException, SQLException, ClassNotFoundException {        // Return some cliched textual content
         OrganizationList organizationList = new OrganizationList();
         organizationList.initialize();
-        organizationList.selectOrganizations(id, name, city, state, postal, category);
+        organizationList.selectOrganizations(id, name, city, state, postal, category, orderby, direction);
        return new ObjectMapper().writeValueAsString(organizationList.getSelection());
     }
 

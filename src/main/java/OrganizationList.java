@@ -15,8 +15,8 @@ public class OrganizationList extends OrganizationListDTO {
         conn = DriverManager.getConnection(dbURL);
     }
 
-    public void selectOrganizations(int id, String name, String city, String state, String postal, String category) throws SQLException {
-        String sql = getSqlString(id, name, city, state, postal, category);
+    public void selectOrganizations(int id, String name, String city, String state, String postal, String category, String orderby, String direction) throws SQLException {
+        String sql = getSqlString(id, name, city, state, postal, category, orderby, direction);
         Statement stmt = conn.createStatement();
         ResultSet resultset = stmt.executeQuery(sql.toString());
         result = getOrganizationList(resultset);
@@ -36,7 +36,7 @@ public class OrganizationList extends OrganizationListDTO {
         return result;
     }
 
-    protected String getSqlString(int id, String name, String city, String state, String postal, String category) {
+    protected String getSqlString(int id, String name, String city, String state, String postal, String category, String orderby, String direction) {
         StringBuilder sql = new StringBuilder("select * from organizations");
         List<String> params = getNonDefaultParams(id, name, city, state, postal, category);
         boolean first = true;
@@ -48,6 +48,19 @@ public class OrganizationList extends OrganizationListDTO {
                 sql.append(" and ");
             }
             sql.append(param);
+        }
+        if(!orderby.isEmpty()) {
+            sql.append(" order by upper(");
+            sql.append(orderby);
+            sql.append(")");
+            if (!direction.isEmpty()) {
+                if (direction.equals("ASC")) {
+                    sql.append(" ASC");
+                }
+                if (direction.equals("DSC")) {
+                    sql.append(" DESC");
+                }
+            }
         }
         sql.append(';');
         return sql.toString();
